@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class NEUTCOMP_TER_Reminder_Mailer {
-	const SETTINGS_OPTION = 'ter_reminder_email_settings';
+	const SETTINGS_OPTION = 'neutcomp_reminder_email_settings';
 
 	public static function get_settings() {
 		$defaults = array(

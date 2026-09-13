@@ -5,13 +5,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class NEUTCOMP_TER_Reminder_Post_Type {
-	const POST_TYPE = 'ter_reminder';
+	const POST_TYPE = 'neutcomp_reminder';
 
-	const NAME_META   = '_ter_name';
-	const EMAIL_META  = '_ter_email';
-	const TEAM_META   = '_ter_team_id';
-	const DATE_META   = '_ter_date';
-	const STATUS_META = '_ter_status';
+	const NAME_META   = '_neutcomp_name';
+	const EMAIL_META  = '_neutcomp_email';
+	const TEAM_META   = '_neutcomp_team_id';
+	const DATE_META   = '_neutcomp_date';
+	const STATUS_META = '_neutcomp_status';
 
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'register' ) );

@@ -5,8 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class NEUTCOMP_TER_Reminder_Cron {
-	const HOOK = 'ter_process_reminders';
-	const LOCK = 'ter_process_reminders_lock';
+	const HOOK = 'neutcomp_process_reminders';
+	const LOCK = 'neutcomp_process_reminders_lock';
 
 	public static function init() {
 		add_filter( 'cron_schedules', array( __CLASS__, 'add_schedule' ) );
@@ -14,7 +14,7 @@ class NEUTCOMP_TER_Reminder_Cron {
 	}
 
 	public static function add_schedule( $schedules ) {
-		$schedules['ter_every_thirty_minutes'] = array(
+		$schedules['neutcomp_every_thirty_minutes'] = array(
 			'interval' => 30 * MINUTE_IN_SECONDS,
 			'display'  => __( 'Every 30 minutes', 'team-reminder-for-clubs' ),
 		);
@@ -26,7 +26,7 @@ class NEUTCOMP_TER_Reminder_Cron {
 		NEUTCOMP_TER_Reminder_Post_Type::register();
 
 		if ( ! wp_next_scheduled( self::HOOK ) ) {
-			wp_schedule_event( time(), 'ter_every_thirty_minutes', self::HOOK );
+			wp_schedule_event( time(), 'neutcomp_every_thirty_minutes', self::HOOK );
 		}
 
 		flush_rewrite_rules();

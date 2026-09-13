@@ -5,10 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class NEUTCOMP_TER_Team_Post_Type {
-	const POST_TYPE = 'ter_team';
+	const POST_TYPE = 'neutcomp_team';
 
-	const NAME_META  = '_ter_team_name';
-	const EMAIL_META = '_ter_team_email';
+	const NAME_META  = '_neutcomp_team_name';
+	const EMAIL_META = '_neutcomp_team_email';
 
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'register' ) );

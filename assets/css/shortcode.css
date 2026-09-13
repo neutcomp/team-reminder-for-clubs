@@ -1,21 +1,21 @@
-.ter-schedule-table {
+.neutcomp-schedule-table {
   width: 100%;
 }
 
-.ter-schedule-table th,
-.ter-schedule-table td {
+.neutcomp-schedule-table th,
+.neutcomp-schedule-table td {
   padding: 10px 12px;
 }
 
-.ter-schedule-table tbody tr {
+.neutcomp-schedule-table tbody tr {
   background-color: #fff;
 }
 
-.ter-schedule-table tbody tr:nth-child(even) {
+.neutcomp-schedule-table tbody tr:nth-child(even) {
   background-color: #f0f0f0;
 }
 
-.ter-schedule-table.ter-schedule-table-split th,
-.ter-schedule-table.ter-schedule-table-split td {
+.neutcomp-schedule-table.neutcomp-schedule-table-split th,
+.neutcomp-schedule-table.neutcomp-schedule-table-split td {
   width: 25%;
 }

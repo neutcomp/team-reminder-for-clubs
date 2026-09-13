@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class NEUTCOMP_TER_Reminder_Shortcode {
-	const STYLE_HANDLE = 'ter-reminder-shortcode';
+	const STYLE_HANDLE = 'neutcomp-reminder-shortcode';
 
 	public static function init() {
 		add_shortcode( 'neutcomp-schedule', array( __CLASS__, 'render' ) );
@@ -60,7 +60,7 @@ class NEUTCOMP_TER_Reminder_Shortcode {
 
 		ob_start();
 		?>
-		<table class="ter-schedule-table<?php echo $split ? ' ter-schedule-table-split' : ''; ?>">
+		<table class="neutcomp-schedule-table<?php echo $split ? ' neutcomp-schedule-table-split' : ''; ?>">
 			<thead>
 				<tr>
 					<th><?php esc_html_e( 'Date', 'team-reminder-for-clubs' ); ?></th>

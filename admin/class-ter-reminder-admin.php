@@ -5,9 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class NEUTCOMP_TER_Reminder_Admin {
-	const PAGE = 'ter-reminders';
-	const TEAMS_PAGE = 'ter-reminder-teams';
-	const SETTINGS_PAGE = 'ter-reminder-settings';
+	const PAGE = 'neutcomp-reminders';
+	const TEAMS_PAGE = 'neutcomp-reminder-teams';
+	const SETTINGS_PAGE = 'neutcomp-reminder-settings';
 	const CAPABILITY = 'edit_others_posts';
 
 	private static $hook_suffixes = array();
@@ -15,15 +15,15 @@ class NEUTCOMP_TER_Reminder_Admin {
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
-		add_action( 'admin_post_ter_save_reminder', array( __CLASS__, 'save' ) );
-		add_action( 'admin_post_ter_save_team', array( __CLASS__, 'save_team' ) );
-		add_action( 'admin_post_ter_delete_reminder', array( __CLASS__, 'delete' ) );
-		add_action( 'admin_post_ter_delete_team', array( __CLASS__, 'delete_team' ) );
-		add_action( 'admin_post_ter_bulk_delete_reminders', array( __CLASS__, 'bulk_delete' ) );
-		add_action( 'admin_post_ter_run_cron', array( __CLASS__, 'run_cron' ) );
-		add_action( 'admin_post_ter_save_settings', array( __CLASS__, 'save_settings' ) );
-		add_action( 'admin_post_ter_export_data', array( __CLASS__, 'export_data' ) );
-		add_action( 'admin_post_ter_import_data', array( __CLASS__, 'import_data' ) );
+		add_action( 'admin_post_neutcomp_save_reminder', array( __CLASS__, 'save' ) );
+		add_action( 'admin_post_neutcomp_save_team', array( __CLASS__, 'save_team' ) );
+		add_action( 'admin_post_neutcomp_delete_reminder', array( __CLASS__, 'delete' ) );
+		add_action( 'admin_post_neutcomp_delete_team', array( __CLASS__, 'delete_team' ) );
+		add_action( 'admin_post_neutcomp_bulk_delete_reminders', array( __CLASS__, 'bulk_delete' ) );
+		add_action( 'admin_post_neutcomp_run_cron', array( __CLASS__, 'run_cron' ) );
+		add_action( 'admin_post_neutcomp_save_settings', array( __CLASS__, 'save_settings' ) );
+		add_action( 'admin_post_neutcomp_export_data', array( __CLASS__, 'export_data' ) );
+		add_action( 'admin_post_neutcomp_import_data', array( __CLASS__, 'import_data' ) );
 	}
 
 	public static function menu() {
@@ -58,7 +58,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 			return;
 		}
 
-		wp_enqueue_style( 'ter-reminder-admin', NEUTCOMP_TER_URL . 'assets/css/admin.css', array(), NEUTCOMP_TER_VERSION );
+		wp_enqueue_style( 'neutcomp-reminder-admin', NEUTCOMP_TER_URL . 'assets/css/admin.css', array(), NEUTCOMP_TER_VERSION );
 	}
 
 	public static function render() {
@@ -68,7 +68,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 
 		$edit_id = 0;
 		if ( isset( $_GET['edit'] ) ) {
-			check_admin_referer( 'ter_edit_reminder' );
+			check_admin_referer( 'neutcomp_edit_reminder' );
 			$edit_id = absint( $_GET['edit'] );
 		}
 		$editing  = $edit_id ? NEUTCOMP_TER_Reminder_Post_Type::get( $edit_id ) : array(
@@ -96,26 +96,26 @@ class NEUTCOMP_TER_Reminder_Admin {
 	<?php self::notice(); ?>
 	<p>
 		<a class="button"
-			href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=ter_run_cron' ), 'ter_run_cron' ) ); ?>">
+			href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=neutcomp_run_cron' ), 'neutcomp_run_cron' ) ); ?>">
 			<?php esc_html_e( 'Check reminders now', 'team-reminder-for-clubs' ); ?>
 		</a>
 	</p>
 	<h2>
 		<?php echo $editing['id'] ? esc_html__( 'Edit reminder', 'team-reminder-for-clubs' ) : esc_html__( 'Add reminder', 'team-reminder-for-clubs' ); ?>
 	</h2>
-	<form class="ter-reminder-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-		<input type="hidden" name="action" value="ter_save_reminder">
+	<form class="neutcomp-reminder-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<input type="hidden" name="action" value="neutcomp_save_reminder">
 		<input type="hidden" name="reminder_id" value="<?php echo esc_attr( $editing['id'] ); ?>">
-		<?php wp_nonce_field( 'ter_save_reminder' ); ?>
+		<?php wp_nonce_field( 'neutcomp_save_reminder' ); ?>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th><label for="ter-name"><?php esc_html_e( 'Name', 'team-reminder-for-clubs' ); ?></label></th>
-				<td><input required class="regular-text" id="ter-name" name="name"
+				<th><label for="neutcomp-name"><?php esc_html_e( 'Name', 'team-reminder-for-clubs' ); ?></label></th>
+				<td><input required class="regular-text" id="neutcomp-name" name="name"
 						value="<?php echo esc_attr( $editing['name'] ); ?>"></td>
 			</tr>
 			<tr>
-				<th><label for="ter-team"><?php esc_html_e( 'Team', 'team-reminder-for-clubs' ); ?></label></th>
-				<td><select required class="regular-text" id="ter-team" name="team_id">
+				<th><label for="neutcomp-team"><?php esc_html_e( 'Team', 'team-reminder-for-clubs' ); ?></label></th>
+				<td><select required class="regular-text" id="neutcomp-team" name="team_id">
 						<option value=""><?php esc_html_e( 'Select a team', 'team-reminder-for-clubs' ); ?></option>
 						<?php foreach ( $teams as $team ) : ?><option value="<?php echo esc_attr( $team['id'] ); ?>"
 							<?php selected( $editing['team_id'], $team['id'] ); ?>><?php echo esc_html( $team['name'] ); ?></option>
@@ -124,8 +124,8 @@ class NEUTCOMP_TER_Reminder_Admin {
 						<?php esc_html_e( 'Create a team first.', 'team-reminder-for-clubs' ); ?></p><?php endif; ?></td>
 			</tr>
 			<tr>
-				<th><label for="ter-date"><?php esc_html_e( 'Date', 'team-reminder-for-clubs' ); ?></label></th>
-				<td><input required type="date" id="ter-date" name="date" min="<?php echo esc_attr( wp_date( 'Y-m-d' ) ); ?>"
+				<th><label for="neutcomp-date"><?php esc_html_e( 'Date', 'team-reminder-for-clubs' ); ?></label></th>
+				<td><input required type="date" id="neutcomp-date" name="date" min="<?php echo esc_attr( wp_date( 'Y-m-d' ) ); ?>"
 						value="<?php echo esc_attr( $editing['date'] ); ?>"></td>
 			</tr>
 		</table>
@@ -134,9 +134,9 @@ class NEUTCOMP_TER_Reminder_Admin {
 	<hr>
 	<h2><?php echo esc_html( sprintf( __( 'Overview (%d)', 'team-reminder-for-clubs' ), count( $reminder_ids ) ) ); ?></h2>
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-		<input type="hidden" name="action" value="ter_bulk_delete_reminders">
-		<?php wp_nonce_field( 'ter_bulk_delete_reminders' ); ?>
-		<table class="widefat fixed striped ter-reminder-table">
+		<input type="hidden" name="action" value="neutcomp_bulk_delete_reminders">
+		<?php wp_nonce_field( 'neutcomp_bulk_delete_reminders' ); ?>
+		<table class="widefat fixed striped neutcomp-reminder-table">
 			<thead>
 				<tr>
 					<th class="check-column"><input type="checkbox"
@@ -167,19 +167,19 @@ class NEUTCOMP_TER_Reminder_Admin {
 					<td><?php echo esc_html( self::get_team_name( $reminder['team_id'] ) ); ?></td>
 					<td><?php echo esc_html( self::format_date( $reminder['date'] ) ); ?></td>
 					<td><span
-							class="ter-status-<?php echo esc_attr( $reminder['status'] ); ?>"><?php echo esc_html( self::get_status_label( $reminder['status'] ) ); ?></span>
+							class="neutcomp-status-<?php echo esc_attr( $reminder['status'] ); ?>"><?php echo esc_html( self::get_status_label( $reminder['status'] ) ); ?></span>
 					</td>
 					<td><a
-							href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=' . self::PAGE . '&edit=' . $reminder_id ), 'ter_edit_reminder' ) ); ?>"><?php esc_html_e( 'Edit', 'team-reminder-for-clubs' ); ?></a>
+							href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=' . self::PAGE . '&edit=' . $reminder_id ), 'neutcomp_edit_reminder' ) ); ?>"><?php esc_html_e( 'Edit', 'team-reminder-for-clubs' ); ?></a>
 						| <a
-							href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=ter_delete_reminder&reminder_id=' . $reminder_id ), 'ter_delete_reminder_' . $reminder_id ) ); ?>"
+							href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=neutcomp_delete_reminder&reminder_id=' . $reminder_id ), 'neutcomp_delete_reminder_' . $reminder_id ) ); ?>"
 							onclick="return confirm('<?php echo esc_js( __( 'Delete this reminder?', 'team-reminder-for-clubs' ) ); ?>');"><?php esc_html_e( 'Delete', 'team-reminder-for-clubs' ); ?></a>
 					</td>
 				</tr>
 				<?php endforeach; endif; ?>
 			</tbody>
 		</table>
-		<div class="ter-bulk-delete-submit">
+		<div class="neutcomp-bulk-delete-submit">
 			<?php submit_button( __( 'Delete selected reminders', 'team-reminder-for-clubs' ), 'delete', 'submit', false, array( 'onclick' => "return confirm('" . esc_js( __( 'Delete the selected reminders?', 'team-reminder-for-clubs' ) ) . "');" ) ); ?>
 		</div>
 	</form>
@@ -189,7 +189,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 
 	public static function save() {
 		self::check_access();
-		check_admin_referer( 'ter_save_reminder' );
+		check_admin_referer( 'neutcomp_save_reminder' );
 
 		$fields = array(
 			'name'    => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
@@ -223,7 +223,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 		self::check_access();
 		$edit_id = 0;
 		if ( isset( $_GET['edit'] ) ) {
-			check_admin_referer( 'ter_edit_team' );
+			check_admin_referer( 'neutcomp_edit_team' );
 			$edit_id = absint( $_GET['edit'] );
 		}
 		$editing = $edit_id ? NEUTCOMP_TER_Team_Post_Type::get( $edit_id ) : array( 'id' => 0, 'name' => '', 'email' => '' );
@@ -236,18 +236,18 @@ class NEUTCOMP_TER_Reminder_Admin {
 		<?php echo $editing['id'] ? esc_html__( 'Edit team', 'team-reminder-for-clubs' ) : esc_html__( 'Add team', 'team-reminder-for-clubs' ); ?>
 	</h2>
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-		<input type="hidden" name="action" value="ter_save_team">
+		<input type="hidden" name="action" value="neutcomp_save_team">
 		<input type="hidden" name="team_id" value="<?php echo esc_attr( $editing['id'] ); ?>">
-		<?php wp_nonce_field( 'ter_save_team' ); ?>
+		<?php wp_nonce_field( 'neutcomp_save_team' ); ?>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th><label for="ter-team-name"><?php esc_html_e( 'Name', 'team-reminder-for-clubs' ); ?></label></th>
-				<td><input required class="regular-text" id="ter-team-name" name="name"
+				<th><label for="neutcomp-team-name"><?php esc_html_e( 'Name', 'team-reminder-for-clubs' ); ?></label></th>
+				<td><input required class="regular-text" id="neutcomp-team-name" name="name"
 						value="<?php echo esc_attr( $editing['name'] ); ?>"></td>
 			</tr>
 			<tr>
-				<th><label for="ter-team-email"><?php esc_html_e( 'Email address', 'team-reminder-for-clubs' ); ?></label></th>
-				<td><input required type="text" class="regular-text" id="ter-team-email" name="email"
+				<th><label for="neutcomp-team-email"><?php esc_html_e( 'Email address', 'team-reminder-for-clubs' ); ?></label></th>
+				<td><input required type="text" class="regular-text" id="neutcomp-team-email" name="email"
 						value="<?php echo esc_attr( $editing['email'] ); ?>">
 					<p class="description">
 						<?php esc_html_e( 'Separate multiple email addresses with semicolons.', 'team-reminder-for-clubs' ); ?></p>
@@ -276,9 +276,9 @@ class NEUTCOMP_TER_Reminder_Admin {
 				<td><?php echo esc_html( $team['name'] ); ?></td>
 				<td><?php echo esc_html( $team['email'] ); ?></td>
 				<td><a
-						href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=' . self::TEAMS_PAGE . '&edit=' . $team['id'] ), 'ter_edit_team' ) ); ?>"><?php esc_html_e( 'Edit', 'team-reminder-for-clubs' ); ?></a>
+						href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=' . self::TEAMS_PAGE . '&edit=' . $team['id'] ), 'neutcomp_edit_team' ) ); ?>"><?php esc_html_e( 'Edit', 'team-reminder-for-clubs' ); ?></a>
 					| <a
-						href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=ter_delete_team&team_id=' . $team['id'] ), 'ter_delete_team_' . $team['id'] ) ); ?>"
+						href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=neutcomp_delete_team&team_id=' . $team['id'] ), 'neutcomp_delete_team_' . $team['id'] ) ); ?>"
 						onclick="return confirm('<?php echo esc_js( __( 'Delete this team?', 'team-reminder-for-clubs' ) ); ?>');"><?php esc_html_e( 'Delete', 'team-reminder-for-clubs' ); ?></a>
 				</td>
 			</tr>
@@ -291,7 +291,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 
 	public static function save_team() {
 		self::check_access();
-		check_admin_referer( 'ter_save_team' );
+		check_admin_referer( 'neutcomp_save_team' );
 
 		$fields  = array(
 			'name'  => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
@@ -317,7 +317,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 	public static function delete_team() {
 		self::check_access();
 		$team_id = isset( $_GET['team_id'] ) ? absint( $_GET['team_id'] ) : 0;
-		check_admin_referer( 'ter_delete_team_' . $team_id );
+		check_admin_referer( 'neutcomp_delete_team_' . $team_id );
 
 		$linked_reminders = get_posts(
 			array(
@@ -348,7 +348,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 	public static function delete() {
 		self::check_access();
 		$reminder_id = isset( $_GET['reminder_id'] ) ? absint( $_GET['reminder_id'] ) : 0;
-		check_admin_referer( 'ter_delete_reminder_' . $reminder_id );
+		check_admin_referer( 'neutcomp_delete_reminder_' . $reminder_id );
 
 		if ( NEUTCOMP_TER_Reminder_Post_Type::POST_TYPE === get_post_type( $reminder_id ) ) {
 			wp_delete_post( $reminder_id, true );
@@ -359,7 +359,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 
 	public static function bulk_delete() {
 		self::check_access();
-		check_admin_referer( 'ter_bulk_delete_reminders' );
+		check_admin_referer( 'neutcomp_bulk_delete_reminders' );
 
 		$reminder_ids = isset( $_POST['reminder_ids'] ) ? array_map( 'absint', (array) wp_unslash( $_POST['reminder_ids'] ) ) : array();
 		$deleted      = 0;
@@ -375,7 +375,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 
 	public static function run_cron() {
 		self::check_access();
-		check_admin_referer( 'ter_run_cron' );
+		check_admin_referer( 'neutcomp_run_cron' );
 		NEUTCOMP_TER_Reminder_Cron::process();
 		self::redirect( 0, 'cron-run' );
 	}
@@ -398,13 +398,13 @@ class NEUTCOMP_TER_Reminder_Admin {
 	<?php self::render_import_export_tab(); ?>
 	<?php else : ?>
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-		<input type="hidden" name="action" value="ter_save_settings">
-		<?php wp_nonce_field( 'ter_save_settings' ); ?>
+		<input type="hidden" name="action" value="neutcomp_save_settings">
+		<?php wp_nonce_field( 'neutcomp_save_settings' ); ?>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th><label for="ter-reminder-days"><?php esc_html_e( 'Days before reminder', 'team-reminder-for-clubs' ); ?></label>
+				<th><label for="neutcomp-reminder-days"><?php esc_html_e( 'Days before reminder', 'team-reminder-for-clubs' ); ?></label>
 				</th>
-				<td><input required type="number" min="0" step="1" class="small-text" id="ter-reminder-days"
+				<td><input required type="number" min="0" step="1" class="small-text" id="neutcomp-reminder-days"
 						name="reminder_days" value="<?php echo esc_attr( $settings['reminder_days'] ); ?>">
 					<p class="description">
 						<?php esc_html_e( 'Number of calendar days before the reminder date when the email should be sent.', 'team-reminder-for-clubs' ); ?>
@@ -412,23 +412,23 @@ class NEUTCOMP_TER_Reminder_Admin {
 				</td>
 			</tr>
 			<tr>
-				<th><label for="ter-from-email"><?php esc_html_e( 'Sender email address', 'team-reminder-for-clubs' ); ?></label>
+				<th><label for="neutcomp-from-email"><?php esc_html_e( 'Sender email address', 'team-reminder-for-clubs' ); ?></label>
 				</th>
-				<td><input required type="email" class="regular-text" id="ter-from-email" name="from_email"
+				<td><input required type="email" class="regular-text" id="neutcomp-from-email" name="from_email"
 						value="<?php echo esc_attr( $settings['from_email'] ); ?>"></td>
 			</tr>
 			<tr>
-				<th><label for="ter-email-subject"><?php esc_html_e( 'Email subject', 'team-reminder-for-clubs' ); ?></label></th>
-				<td><input required class="large-text" id="ter-email-subject" name="subject"
+				<th><label for="neutcomp-email-subject"><?php esc_html_e( 'Email subject', 'team-reminder-for-clubs' ); ?></label></th>
+				<td><input required class="large-text" id="neutcomp-email-subject" name="subject"
 						value="<?php echo esc_attr( $settings['subject'] ); ?>"></td>
 			</tr>
 			<tr>
-				<th><label for="ter-email-message"><?php esc_html_e( 'Email message', 'team-reminder-for-clubs' ); ?></label></th>
+				<th><label for="neutcomp-email-message"><?php esc_html_e( 'Email message', 'team-reminder-for-clubs' ); ?></label></th>
 				<td>
 					<?php
 							wp_editor(
 								$settings['message'],
-								'ter-email-message',
+								'neutcomp-email-message',
 								array(
 									'textarea_name' => 'message',
 									'textarea_rows' => 12,
@@ -455,8 +455,8 @@ class NEUTCOMP_TER_Reminder_Admin {
 	<h2><?php esc_html_e( 'Export', 'team-reminder-for-clubs' ); ?></h2>
 	<p><?php esc_html_e( 'Export all teams and reminders to a CSV file.', 'team-reminder-for-clubs' ); ?></p>
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-		<input type="hidden" name="action" value="ter_export_data">
-		<?php wp_nonce_field( 'ter_export_data' ); ?>
+		<input type="hidden" name="action" value="neutcomp_export_data">
+		<?php wp_nonce_field( 'neutcomp_export_data' ); ?>
 		<?php submit_button( __( 'Export CSV', 'team-reminder-for-clubs' ), 'primary', 'submit', false ); ?>
 	</form>
 </div>
@@ -467,8 +467,8 @@ class NEUTCOMP_TER_Reminder_Admin {
 		<?php esc_html_e( 'Importing a CSV file will replace all existing teams and reminders.', 'team-reminder-for-clubs' ); ?>
 	</p>
 	<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-		<input type="hidden" name="action" value="ter_import_data">
-		<?php wp_nonce_field( 'ter_import_data' ); ?>
+		<input type="hidden" name="action" value="neutcomp_import_data">
+		<?php wp_nonce_field( 'neutcomp_import_data' ); ?>
 		<input type="file" name="import_file" accept=".csv,text/csv" required>
 		<p class="description">
 			<?php esc_html_e( 'Expected columns: type, name, team_name, email, date, status', 'team-reminder-for-clubs' ); ?></p>
@@ -480,7 +480,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 
 	public static function save_settings() {
 		self::check_access();
-		check_admin_referer( 'ter_save_settings' );
+		check_admin_referer( 'neutcomp_save_settings' );
 
 		$from_email = isset( $_POST['from_email'] ) ? sanitize_email( wp_unslash( $_POST['from_email'] ) ) : '';
 		$subject    = isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '';
@@ -507,7 +507,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 
 	public static function export_data() {
 		self::check_access();
-		check_admin_referer( 'ter_export_data' );
+		check_admin_referer( 'neutcomp_export_data' );
 
 		$teams     = NEUTCOMP_TER_Team_Post_Type::get_all();
 		$reminders = NEUTCOMP_TER_Reminder_Post_Type::get_all();
@@ -537,7 +537,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 
 	public static function import_data() {
 		self::check_access();
-		check_admin_referer( 'ter_import_data' );
+		check_admin_referer( 'neutcomp_import_data' );
 
 		if ( empty( $_FILES['import_file']['tmp_name'] ) ) {
 			self::settings_redirect( 'import-error', 'import-export' );
@@ -694,7 +694,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 			$url = add_query_arg(
 				array(
 					'edit'     => absint( $reminder_id ),
-					'_wpnonce' => wp_create_nonce( 'ter_edit_reminder' ),
+					'_wpnonce' => wp_create_nonce( 'neutcomp_edit_reminder' ),
 				),
 				$url
 			);
@@ -714,7 +714,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 			$url = add_query_arg(
 				array(
 					'edit'     => absint( $team_id ),
-					'_wpnonce' => wp_create_nonce( 'ter_edit_team' ),
+					'_wpnonce' => wp_create_nonce( 'neutcomp_edit_team' ),
 				),
 				$url
 			);
