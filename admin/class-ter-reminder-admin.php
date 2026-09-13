@@ -10,8 +10,11 @@ class NEUTCOMP_TER_Reminder_Admin {
 	const SETTINGS_PAGE = 'ter-reminder-settings';
 	const CAPABILITY = 'edit_others_posts';
 
+	private static $hook_suffixes = array();
+
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
 		add_action( 'admin_post_ter_save_reminder', array( __CLASS__, 'save' ) );
 		add_action( 'admin_post_ter_save_team', array( __CLASS__, 'save_team' ) );
 		add_action( 'admin_post_ter_delete_reminder', array( __CLASS__, 'delete' ) );
@@ -24,7 +27,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 	}
 
 	public static function menu() {
-		add_menu_page(
+		self::$hook_suffixes[] = add_menu_page(
 			__( 'Team reminders for clubs', 'team-reminder-for-clubs' ),
 			__( 'Reminders', 'team-reminder-for-clubs' ),
 			self::CAPABILITY,
@@ -33,7 +36,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 			'dashicons-email-alt',
 			100
 		);
-		add_submenu_page(
+		self::$hook_suffixes[] = add_submenu_page(
 			self::PAGE,
 			__( 'Teams', 'team-reminder-for-clubs' ),
 			__( 'Teams', 'team-reminder-for-clubs' ),
@@ -41,13 +44,21 @@ class NEUTCOMP_TER_Reminder_Admin {
 			self::TEAMS_PAGE,
 			array( __CLASS__, 'render_teams' )
 		);
-		add_options_page(
+		self::$hook_suffixes[] = add_options_page(
 			__( 'Team Reminder for Clubs', 'team-reminder-for-clubs' ),
 			__( 'Team Reminder for Clubs', 'team-reminder-for-clubs' ),
 			self::CAPABILITY,
 			self::SETTINGS_PAGE,
 			array( __CLASS__, 'render_settings' )
 		);
+	}
+
+	public static function enqueue_assets( $hook_suffix ) {
+		if ( ! in_array( $hook_suffix, self::$hook_suffixes, true ) ) {
+			return;
+		}
+
+		wp_enqueue_style( 'ter-reminder-admin', NEUTCOMP_TER_URL . 'assets/css/admin.css', array(), NEUTCOMP_TER_VERSION );
 	}
 
 	public static function render() {
@@ -122,42 +133,6 @@ class NEUTCOMP_TER_Reminder_Admin {
 	</form>
 	<hr>
 	<h2><?php echo esc_html( sprintf( __( 'Overview (%d)', 'team-reminder-for-clubs' ), count( $reminder_ids ) ) ); ?></h2>
-	<style>
-	.ter-status-not-sent {
-		color: #b32d2e;
-		font-weight: 600;
-	}
-
-	.ter-status-sent {
-		color: #008a20;
-		font-weight: 600;
-	}
-
-	.ter-reminder-table .check-column {
-		position: relative;
-		vertical-align: middle !important;
-	}
-
-	.ter-reminder-table .check-column input[type="checkbox"] {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		margin: 0;
-		transform: translate(-50%, -50%);
-	}
-
-	.ter-bulk-delete-submit {
-		margin-top: 16px;
-	}
-
-	.ter-reminder-form #ter-name,
-	.ter-reminder-form #ter-email,
-	.ter-reminder-form #ter-date {
-		box-sizing: border-box;
-		height: 44px !important;
-		min-height: 44px !important;
-	}
-	</style>
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 		<input type="hidden" name="action" value="ter_bulk_delete_reminders">
 		<?php wp_nonce_field( 'ter_bulk_delete_reminders' ); ?>
@@ -264,13 +239,6 @@ class NEUTCOMP_TER_Reminder_Admin {
 		<input type="hidden" name="action" value="ter_save_team">
 		<input type="hidden" name="team_id" value="<?php echo esc_attr( $editing['id'] ); ?>">
 		<?php wp_nonce_field( 'ter_save_team' ); ?>
-		<style>
-		#ter-team-name {
-			box-sizing: border-box;
-			height: 44px !important;
-			min-height: 44px !important;
-		}
-		</style>
 		<table class="form-table" role="presentation">
 			<tr>
 				<th><label for="ter-team-name"><?php esc_html_e( 'Name', 'team-reminder-for-clubs' ); ?></label></th>

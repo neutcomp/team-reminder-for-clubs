@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'NEUTCOMP_TER_VERSION', '1.0.0' );
 define( 'NEUTCOMP_TER_FILE', __FILE__ );
 define( 'NEUTCOMP_TER_PATH', plugin_dir_path( __FILE__ ) );
+define( 'NEUTCOMP_TER_URL', plugin_dir_url( __FILE__ ) );
 
 require_once NEUTCOMP_TER_PATH . 'includes/class-ter-reminder-post-type.php';
 require_once NEUTCOMP_TER_PATH . 'includes/class-ter-team-post-type.php';

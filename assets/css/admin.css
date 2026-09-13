@@ -1,0 +1,35 @@
+.ter-status-not-sent {
+  color: #b32d2e;
+  font-weight: 600;
+}
+
+.ter-status-sent {
+  color: #008a20;
+  font-weight: 600;
+}
+
+.ter-reminder-table .check-column {
+  position: relative;
+  vertical-align: middle !important;
+}
+
+.ter-reminder-table .check-column input[type="checkbox"] {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+.ter-bulk-delete-submit {
+  margin-top: 16px;
+}
+
+.ter-reminder-form #ter-name,
+.ter-reminder-form #ter-email,
+.ter-reminder-form #ter-date,
+#ter-team-name {
+  box-sizing: border-box;
+  height: 44px !important;
+  min-height: 44px !important;
+}

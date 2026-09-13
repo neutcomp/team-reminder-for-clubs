@@ -5,8 +5,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class NEUTCOMP_TER_Reminder_Shortcode {
+	const STYLE_HANDLE = 'ter-reminder-shortcode';
+
 	public static function init() {
 		add_shortcode( 'neutcomp-schedule', array( __CLASS__, 'render' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
+	}
+
+	public static function enqueue_assets() {
+		wp_register_style( self::STYLE_HANDLE, NEUTCOMP_TER_URL . 'assets/css/shortcode.css', array(), NEUTCOMP_TER_VERSION );
+
+		$post = is_singular() ? get_post() : null;
+
+		if ( $post && has_shortcode( $post->post_content, 'neutcomp-schedule' ) ) {
+			wp_enqueue_style( self::STYLE_HANDLE );
+		}
 	}
 
 	public static function render( $atts ) {
@@ -47,15 +60,6 @@ class NEUTCOMP_TER_Reminder_Shortcode {
 
 		ob_start();
 		?>
-		<style>
-			.ter-schedule-table { width: 100%; }
-			.ter-schedule-table th,
-			.ter-schedule-table td { padding: 10px 12px; }
-			.ter-schedule-table tbody tr { background-color: #fff; }
-			.ter-schedule-table tbody tr:nth-child(even) { background-color: #f0f0f0; }
-			.ter-schedule-table.ter-schedule-table-split th,
-			.ter-schedule-table.ter-schedule-table-split td { width: 25%; }
-		</style>
 		<table class="ter-schedule-table<?php echo $split ? ' ter-schedule-table-split' : ''; ?>">
 			<thead>
 				<tr>
