@@ -25,9 +25,10 @@ Features include:
 * Track reminders as not sent, sent, or missed.
 * Delete multiple reminders at once.
 * Customize the sender address, subject, email message, and notification delay.
-* Use the `[neutcomp-schedule]` shortcode to display reminders in a public table.
+* Use the `[neutcomp-schedule]` shortcode to display upcoming reminders (from 2 days prior to today) in a public table.
 * Display one or two date and team columns with the `split="true"` attribute.
 * Display numeric dates with the `dateFormat="short"` attribute.
+* Display all past and future reminders with the `showAll="true"` attribute.
 * Export all teams and reminders to CSV and import a generated file to replace the data set.
 * Support English and Dutch based on the WordPress site language.
 
@@ -85,7 +86,7 @@ Open **Settings > Team Reminder for Clubs > Email settings** in the WordPress ad
 
 = How do I display reminders on a page? =
 
-Add `[neutcomp-schedule]` to the page or post. Use `[neutcomp-schedule split="true"]` for two date and team pairs per row, or `[neutcomp-schedule dateFormat="short"]` for numeric dates.
+Add `[neutcomp-schedule]` to the page or post. By default, it displays upcoming reminders from 2 days prior to today onwards. Use `[neutcomp-schedule split="true"]` for two date and team pairs per row, `[neutcomp-schedule dateFormat="short"]` for numeric dates, or `[neutcomp-schedule showAll="true"]` to show all reminders.
 
 = Which languages are supported? =
 

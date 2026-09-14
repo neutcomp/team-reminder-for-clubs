@@ -25,16 +25,18 @@ The email template supports `{name}`, `{team}`, and `{date}` placeholders. The d
 
 ## Shortcode
 
-Add `[neutcomp-schedule]` to a post or page. It displays reminders sorted by date with a Dutch date format such as `Donderdag 10 augustus`. Add `split="true"` to display two date/team pairs next to each other:
+Add `[neutcomp-schedule]` to a post or page. By default, it displays upcoming reminders starting from 2 days prior to today. It displays reminders sorted by date with a Dutch date format such as `Donderdag 10 augustus`.
+
+Add `split="true"` to display two date/team pairs next to each other:
 
 ```text
 [neutcomp-schedule split="true"]
 ```
 
-Use `dateFormat="short"` for numeric dates in `dd-mm-yyyy` format. Parameters can be combined:
+Use `dateFormat="short"` for numeric dates in `dd-mm-yyyy` format. Use `showAll="true"` to show all past and future reminders without the date restriction:
 
 ```text
-[neutcomp-schedule split="true" dateFormat="short"]
+[neutcomp-schedule split="true" dateFormat="short" showAll="true"]
 ```
 
 ## Installation

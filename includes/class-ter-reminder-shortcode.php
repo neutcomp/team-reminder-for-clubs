@@ -23,9 +23,10 @@ class NEUTCOMP_TER_Reminder_Shortcode {
 	}
 
 	public static function render( $atts ) {
-		$atts        = shortcode_atts( array( 'split' => 'false', 'dateformat' => 'long' ), $atts, 'neutcomp-schedule' );
+		$atts        = shortcode_atts( array( 'split' => 'false', 'dateformat' => 'long', 'showall' => 'false' ), $atts, 'neutcomp-schedule' );
 		$split       = 'true' === strtolower( (string) $atts['split'] );
 		$date_format = 'short' === strtolower( (string) $atts['dateformat'] ) ? 'short' : 'long';
+		$show_all    = 'true' === strtolower( (string) $atts['showall'] );
 		$reminder_ids = get_posts(
 			array(
 				'post_type'      => NEUTCOMP_TER_Reminder_Post_Type::POST_TYPE,
@@ -34,13 +35,18 @@ class NEUTCOMP_TER_Reminder_Shortcode {
 				'fields'         => 'ids',
 			)
 		);
-		$reminders = array();
+		$reminders   = array();
+		$cutoff_date = ( new DateTimeImmutable( 'today', wp_timezone() ) )->modify( '-2 days' );
 
 		foreach ( $reminder_ids as $reminder_id ) {
 			$reminder = NEUTCOMP_TER_Reminder_Post_Type::get( $reminder_id );
 			$date     = DateTimeImmutable::createFromFormat( '!Y-m-d', $reminder['date'], wp_timezone() );
 
 			if ( ! $date || $date->format( 'Y-m-d' ) !== $reminder['date'] ) {
+				continue;
+			}
+
+			if ( ! $show_all && $date < $cutoff_date ) {
 				continue;
 			}
 
