@@ -15,7 +15,7 @@
   background-color: #f0f0f0;
 }
 
-.neutcomp-schedule-table.neutcomp-schedule-table-split th,
-.neutcomp-schedule-table.neutcomp-schedule-table-split td {
-  width: 25%;
+.neutcomp-schedule-table.neutcomp-schedule-table-split {
+  table-layout: fixed;
 }
+

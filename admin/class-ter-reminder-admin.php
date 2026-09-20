@@ -76,6 +76,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 			'name'   => '',
 			'team_id' => 0,
 			'date'   => '',
+			'time'   => '',
 			'status' => 'not-sent',
 		);
 		$teams = NEUTCOMP_TER_Team_Post_Type::get_all();
@@ -128,6 +129,11 @@ class NEUTCOMP_TER_Reminder_Admin {
 				<td><input required type="date" id="neutcomp-date" name="date" min="<?php echo esc_attr( wp_date( 'Y-m-d' ) ); ?>"
 						value="<?php echo esc_attr( $editing['date'] ); ?>"></td>
 			</tr>
+			<tr>
+				<th><label for="neutcomp-time"><?php esc_html_e( 'Time', 'team-reminder-for-clubs' ); ?></label></th>
+				<td><input required type="time" id="neutcomp-time" name="time"
+						value="<?php echo esc_attr( $editing['time'] ); ?>"></td>
+			</tr>
 		</table>
 		<?php submit_button( $editing['id'] ? __( 'Update reminder', 'team-reminder-for-clubs' ) : __( 'Add reminder', 'team-reminder-for-clubs' ) ); ?>
 	</form>
@@ -144,6 +150,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 					<th><?php esc_html_e( 'Name', 'team-reminder-for-clubs' ); ?></th>
 					<th><?php esc_html_e( 'Team', 'team-reminder-for-clubs' ); ?></th>
 					<th><?php esc_html_e( 'Date', 'team-reminder-for-clubs' ); ?></th>
+					<th><?php esc_html_e( 'Time', 'team-reminder-for-clubs' ); ?></th>
 					<th><?php esc_html_e( 'Status', 'team-reminder-for-clubs' ); ?></th>
 					<th><?php esc_html_e( 'Actions', 'team-reminder-for-clubs' ); ?></th>
 				</tr>
@@ -151,7 +158,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 			<tbody>
 				<?php if ( ! $reminder_ids ) : ?>
 				<tr>
-					<td colspan="6"><?php esc_html_e( 'No reminders found.', 'team-reminder-for-clubs' ); ?></td>
+					<td colspan="7"><?php esc_html_e( 'No reminders found.', 'team-reminder-for-clubs' ); ?></td>
 				</tr>
 				<?php else : foreach ( $reminder_ids as $reminder_id ) : $reminder = NEUTCOMP_TER_Reminder_Post_Type::get( $reminder_id ); ?>
 				<tr>
@@ -166,6 +173,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 					<td><?php echo esc_html( $reminder['name'] ); ?></td>
 					<td><?php echo esc_html( self::get_team_name( $reminder['team_id'] ) ); ?></td>
 					<td><?php echo esc_html( self::format_date( $reminder['date'] ) ); ?></td>
+					<td><?php echo esc_html( self::format_time( $reminder['time'] ) ); ?></td>
 					<td><span
 							class="neutcomp-status-<?php echo esc_attr( $reminder['status'] ); ?>"><?php echo esc_html( self::get_status_label( $reminder['status'] ) ); ?></span>
 					</td>
@@ -195,11 +203,12 @@ class NEUTCOMP_TER_Reminder_Admin {
 			'name'    => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
 			'team_id' => isset( $_POST['team_id'] ) ? absint( $_POST['team_id'] ) : 0,
 			'date'    => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
+			'time'    => isset( $_POST['time'] ) ? sanitize_text_field( wp_unslash( $_POST['time'] ) ) : '',
 			'status' => 'not-sent',
 		);
 		$reminder_id = isset( $_POST['reminder_id'] ) ? absint( $_POST['reminder_id'] ) : 0;
 
-		if ( ! $fields['name'] || ! self::is_valid_team( $fields['team_id'] ) || ! self::is_date( $fields['date'] ) || self::is_past_date( $fields['date'] ) ) {
+		if ( ! $fields['name'] || ! self::is_valid_team( $fields['team_id'] ) || ! self::is_date( $fields['date'] ) || self::is_past_date( $fields['date'] ) || ! self::is_time( $fields['time'] ) ) {
 			self::redirect( $reminder_id, 'error' );
 		}
 
@@ -438,7 +447,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 							);
 						?>
 					<p class="description">
-						<?php esc_html_e( 'Available placeholders: {name}, {team}, and {date}.', 'team-reminder-for-clubs' ); ?></p>
+						<?php esc_html_e( 'Available placeholders: {name}, {team}, {date}, and {time}.', 'team-reminder-for-clubs' ); ?></p>
 				</td>
 			</tr>
 		</table>
@@ -471,7 +480,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 		<?php wp_nonce_field( 'neutcomp_import_data' ); ?>
 		<input type="file" name="import_file" accept=".csv,text/csv" required>
 		<p class="description">
-			<?php esc_html_e( 'Expected columns: type, name, team_name, email, date, status', 'team-reminder-for-clubs' ); ?></p>
+			<?php esc_html_e( 'Expected columns: type, name, team_name, email, date, time, status', 'team-reminder-for-clubs' ); ?></p>
 		<?php submit_button( __( 'Import CSV', 'team-reminder-for-clubs' ), 'secondary', 'submit', false ); ?>
 	</form>
 </div>
@@ -520,15 +529,15 @@ class NEUTCOMP_TER_Reminder_Admin {
 		header( 'Expires: 0' );
 
 		$output = fopen( 'php://output', 'w' );
-		fputcsv( $output, array( 'type', 'name', 'team_name', 'email', 'date', 'status' ) );
+		fputcsv( $output, array( 'type', 'name', 'team_name', 'email', 'date', 'time', 'status' ) );
 
 		foreach ( $teams as $team ) {
-			fputcsv( $output, array( 'team', $team['name'], '', $team['email'], '', '' ) );
+			fputcsv( $output, array( 'team', $team['name'], '', $team['email'], '', '', '' ) );
 		}
 
 		foreach ( $reminders as $reminder ) {
 			$team_name = $reminder['team_id'] ? self::get_team_name( $reminder['team_id'] ) : '';
-			fputcsv( $output, array( 'reminder', $reminder['name'], $team_name, '', $reminder['date'], $reminder['status'] ) );
+			fputcsv( $output, array( 'reminder', $reminder['name'], $team_name, '', $reminder['date'], $reminder['time'], $reminder['status'] ) );
 		}
 
 		fclose( $output );
@@ -590,6 +599,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 					'name'     => trim( (string) $data['name'] ),
 					'team_name'=> trim( (string) ( $data['team_name'] ?? '' ) ),
 					'date'     => trim( (string) ( $data['date'] ?? '' ) ),
+					'time'     => trim( (string) ( $data['time'] ?? '' ) ),
 					'status'   => trim( strtolower( (string) ( $data['status'] ?? '' ) ) ),
 				);
 			}
@@ -622,7 +632,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 		}
 
 		foreach ( $reminder_rows as $reminder_row ) {
-			if ( '' === $reminder_row['name'] || '' === $reminder_row['date'] ) {
+			if ( '' === $reminder_row['name'] || '' === $reminder_row['date'] || ! self::is_time( $reminder_row['time'] ) ) {
 				continue;
 			}
 
@@ -646,6 +656,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 					'name'    => $reminder_row['name'],
 					'team_id' => $team_id,
 					'date'    => $reminder_row['date'],
+					'time'    => $reminder_row['time'],
 					'status'  => $status,
 				) );
 			}
@@ -741,6 +752,10 @@ class NEUTCOMP_TER_Reminder_Admin {
 		return $date_object && $date_object->format( 'Y-m-d' ) === $date;
 	}
 
+	private static function is_time( $time ) {
+		return (bool) preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', (string) $time );
+	}
+
 	private static function is_past_date( $date ) {
 		$date_object = DateTimeImmutable::createFromFormat( '!Y-m-d', $date, wp_timezone() );
 		$today       = new DateTimeImmutable( 'today', wp_timezone() );
@@ -752,6 +767,12 @@ class NEUTCOMP_TER_Reminder_Admin {
 		$date_object = DateTimeImmutable::createFromFormat( '!Y-m-d', $date, wp_timezone() );
 
 		return $date_object ? $date_object->format( 'd-m-Y' ) : $date;
+	}
+
+	private static function format_time( $time ) {
+		$time_object = DateTimeImmutable::createFromFormat( '!H:i', $time, wp_timezone() );
+
+		return $time_object ? $time_object->format( 'H:i' ) : $time;
 	}
 
 	private static function get_status_label( $status ) {

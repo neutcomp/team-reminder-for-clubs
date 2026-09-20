@@ -11,6 +11,7 @@ class NEUTCOMP_TER_Reminder_Post_Type {
 	const EMAIL_META  = '_neutcomp_email';
 	const TEAM_META   = '_neutcomp_team_id';
 	const DATE_META   = '_neutcomp_date';
+	const TIME_META   = '_neutcomp_time';
 	const STATUS_META = '_neutcomp_status';
 
 	public static function init() {
@@ -44,6 +45,7 @@ class NEUTCOMP_TER_Reminder_Post_Type {
 			'team_id' => absint( get_post_meta( $post_id, self::TEAM_META, true ) ),
 			'email'  => (string) get_post_meta( $post_id, self::EMAIL_META, true ),
 			'date'   => (string) get_post_meta( $post_id, self::DATE_META, true ),
+			'time'   => (string) get_post_meta( $post_id, self::TIME_META, true ),
 			'status' => self::get_status( $post_id ),
 		);
 	}
@@ -58,6 +60,7 @@ class NEUTCOMP_TER_Reminder_Post_Type {
 		update_post_meta( $post_id, self::NAME_META, sanitize_text_field( $fields['name'] ) );
 		update_post_meta( $post_id, self::TEAM_META, absint( $fields['team_id'] ) );
 		update_post_meta( $post_id, self::DATE_META, sanitize_text_field( $fields['date'] ) );
+		update_post_meta( $post_id, self::TIME_META, sanitize_text_field( $fields['time'] ) );
 
 		if ( isset( $fields['status'] ) ) {
 			update_post_meta( $post_id, self::STATUS_META, sanitize_key( $fields['status'] ) );

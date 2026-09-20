@@ -12,7 +12,7 @@ class NEUTCOMP_TER_Reminder_Mailer {
 			'reminder_days' => 2,
 			'from_email'    => get_option( 'admin_email' ),
 			'subject'       => __( 'Team reminder for {name}', 'team-reminder-for-clubs' ),
-			'message'       => __( "Hello {name},\n\nThis is your reminder for team duty at The Victory.\n\nTeam: {team}\nTeam duty date: {date}\n\nKind regards,\nThe Victory", 'team-reminder-for-clubs' ),
+			'message'       => __( "Hello {name},\n\nThis is your reminder for team duty at The Victory.\n\nTeam: {team}\nTeam duty date: {date}\nTeam duty time: {time}\n\nKind regards,\nThe Victory", 'team-reminder-for-clubs' ),
 		);
 
 		return wp_parse_args( get_option( self::SETTINGS_OPTION, array() ), $defaults );
@@ -28,6 +28,7 @@ class NEUTCOMP_TER_Reminder_Mailer {
 			'{team}' => $team,
 			'{code}' => '',
 			'{date}' => $date,
+			'{time}' => $reminder['time'],
 		);
 
 		$subject = strtr( $settings['subject'], $replacements );

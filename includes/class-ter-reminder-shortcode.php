@@ -23,10 +23,11 @@ class NEUTCOMP_TER_Reminder_Shortcode {
 	}
 
 	public static function render( $atts ) {
-		$atts        = shortcode_atts( array( 'split' => 'false', 'dateformat' => 'long', 'showall' => 'false' ), $atts, 'neutcomp-schedule' );
+		$atts        = shortcode_atts( array( 'split' => 'false', 'dateformat' => 'long', 'showall' => 'false', 'showtime' => 'true' ), $atts, 'neutcomp-schedule' );
 		$split       = 'true' === strtolower( (string) $atts['split'] );
 		$date_format = 'short' === strtolower( (string) $atts['dateformat'] ) ? 'short' : 'long';
 		$show_all    = 'true' === strtolower( (string) $atts['showall'] );
+		$show_time   = 'false' !== strtolower( (string) $atts['showtime'] );
 		$reminder_ids = get_posts(
 			array(
 				'post_type'      => NEUTCOMP_TER_Reminder_Post_Type::POST_TYPE,
@@ -70,29 +71,47 @@ class NEUTCOMP_TER_Reminder_Shortcode {
 			<thead>
 				<tr>
 					<th><?php esc_html_e( 'Date', 'team-reminder-for-clubs' ); ?></th>
+					<?php if ( $show_time ) : ?>
+						<th><?php esc_html_e( 'Time', 'team-reminder-for-clubs' ); ?></th>
+					<?php endif; ?>
 					<th><?php esc_html_e( 'Team', 'team-reminder-for-clubs' ); ?></th>
 					<?php if ( $split ) : ?>
 						<th><?php esc_html_e( 'Date', 'team-reminder-for-clubs' ); ?></th>
+						<?php if ( $show_time ) : ?>
+							<th><?php esc_html_e( 'Time', 'team-reminder-for-clubs' ); ?></th>
+						<?php endif; ?>
 						<th><?php esc_html_e( 'Team', 'team-reminder-for-clubs' ); ?></th>
 					<?php endif; ?>
 				</tr>
 			</thead>
 			<tbody>
+			<?php
+				$column_count = ( $show_time ? 3 : 2 ) * ( $split ? 2 : 1 );
+			?>
 			<?php if ( ! $reminders ) : ?>
-				<tr><td colspan="<?php echo $split ? '4' : '2'; ?>"><?php esc_html_e( 'No team duties found.', 'team-reminder-for-clubs' ); ?></td></tr>
+				<tr><td colspan="<?php echo esc_attr( $column_count ); ?>"><?php esc_html_e( 'No team duties found.', 'team-reminder-for-clubs' ); ?></td></tr>
 			<?php elseif ( $split ) : ?>
 				<?php foreach ( $columns[0] as $index => $reminder ) : ?>
 					<?php $second = isset( $columns[1][ $index ] ) ? $columns[1][ $index ] : null; ?>
 					<tr>
 						<td><?php echo esc_html( self::format_date( $reminder['date_object'], $date_format ) ); ?></td>
+						<?php if ( $show_time ) : ?>
+							<td><?php echo esc_html( self::format_time( $reminder['time'] ) ); ?></td>
+						<?php endif; ?>
 						<td><?php echo esc_html( $reminder['name'] ); ?></td>
 						<td><?php echo $second ? esc_html( self::format_date( $second['date_object'], $date_format ) ) : ''; ?></td>
+						<?php if ( $show_time ) : ?>
+							<td><?php echo $second ? esc_html( self::format_time( $second['time'] ) ) : ''; ?></td>
+						<?php endif; ?>
 						<td><?php echo $second ? esc_html( $second['name'] ) : ''; ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else : foreach ( $reminders as $reminder ) : ?>
 				<tr>
 					<td><?php echo esc_html( self::format_date( $reminder['date_object'], $date_format ) ); ?></td>
+					<?php if ( $show_time ) : ?>
+						<td><?php echo esc_html( self::format_time( $reminder['time'] ) ); ?></td>
+					<?php endif; ?>
 					<td><?php echo esc_html( $reminder['name'] ); ?></td>
 				</tr>
 			<?php endforeach; endif; ?>
@@ -109,5 +128,11 @@ class NEUTCOMP_TER_Reminder_Shortcode {
 		}
 
 		return wp_date( 'l j F', $date->getTimestamp(), wp_timezone() );
+	}
+
+	private static function format_time( $time ) {
+		$time_object = DateTimeImmutable::createFromFormat( '!H:i', $time, wp_timezone() );
+
+		return $time_object ? wp_date( 'H:i', $time_object->getTimestamp(), wp_timezone() ) : $time;
 	}
 }

@@ -6,7 +6,7 @@ Team Reminder for Clubs is a small WordPress plugin for managing dated email rem
 
 - Reminder overview with add, edit, and delete actions for Administrators and Editors.
 - Supports selecting and deleting multiple reminders at once.
-- Reminder fields: Name, Team, and Date.
+- Reminder fields: Name, Team, Date, and Time.
 - Teams have a Name and Email field. Multiple team email addresses can be separated with semicolons.
 - Sends an email a configurable number of calendar days before Date.
 - Uses the WordPress site's configured timezone.
@@ -17,11 +17,11 @@ Team Reminder for Clubs is a small WordPress plugin for managing dated email rem
 - Includes an administrator button to run the reminder check immediately.
 - Includes a global WordPress Settings page named “Team Reminder for Clubs” for email configuration and CSV import/export.
 - The email message uses the WordPress HTML editor and supports safe formatting such as bold text.
-- Provides a `[neutcomp-schedule]` shortcode for displaying a public table with the date and name of each reminder.
+- Provides a `[neutcomp-schedule]` shortcode for displaying a public table with the date, time, and name of each reminder.
 - Supports CSV export of all teams and reminders, plus full replacement import from a generated file.
 - Supports English and Dutch based on the WordPress site language.
 
-The email template supports `{name}`, `{team}`, and `{date}` placeholders. The date placeholder is formatted as `dd-mm-yyyy`.
+The email template supports `{name}`, `{team}`, `{date}`, and `{time}` placeholders. The date placeholder is formatted as `dd-mm-yyyy`, and the time placeholder is formatted as `HH:mm`.
 
 ## Shortcode
 
@@ -33,10 +33,10 @@ Add `split="true"` to display two date/team pairs next to each other:
 [neutcomp-schedule split="true"]
 ```
 
-Use `dateFormat="short"` for numeric dates in `dd-mm-yyyy` format. Use `showAll="true"` to show all past and future reminders without the date restriction:
+Use `dateFormat="short"` for numeric dates in `dd-mm-yyyy` format. Use `showAll="true"` to show all past and future reminders without the date restriction. Use `showTime="false"` to hide the time column, which is shown by default:
 
 ```text
-[neutcomp-schedule split="true" dateFormat="short" showAll="true"]
+[neutcomp-schedule split="true" dateFormat="short" showAll="true" showTime="false"]
 ```
 
 ## Installation
