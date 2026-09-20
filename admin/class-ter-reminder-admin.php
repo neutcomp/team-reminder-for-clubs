@@ -76,7 +76,7 @@ class NEUTCOMP_TER_Reminder_Admin {
 			'name'   => '',
 			'team_id' => 0,
 			'date'   => '',
-			'time'   => '',
+			'time'   => '19:30',
 			'status' => 'not-sent',
 		);
 		$teams = NEUTCOMP_TER_Team_Post_Type::get_all();
