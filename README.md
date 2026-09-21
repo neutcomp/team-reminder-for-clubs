@@ -69,6 +69,24 @@ On each run, the plugin compares the reminder Date with the current date in the 
 - Date is more than the configured number of days ahead: leave as `not-sent`.
 - `wp_mail()` returns `false`: leave as `not-sent` for the next check.
 
+## Changelog
+
+### 1.0.0
+- Initial release.
+- Added reminder and team management.
+- Added scheduled email notifications.
+- Added customizable email settings.
+- Added the `[neutcomp-schedule]` shortcode.
+- Added CSV import/export for teams and reminders.
+- Added English and Dutch translations.
+
+### 2.0.0
+
+- Added reminder time support to the reminder form, schedule output, and email placeholders.
+- Added the `showTime="false"` shortcode option to hide the time column in the public schedule.
+- Improved the public schedule output for date and time formatting with the `split`, `dateFormat`, and `showAll` options.
+- Updated the plugin documentation to describe the release features and shortcode usage.
+
 ## Development checks
 
 Run a PHP syntax check for every source file:

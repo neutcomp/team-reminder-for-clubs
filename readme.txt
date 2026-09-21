@@ -129,7 +129,16 @@ The email settings screen.
 * Added CSV import/export for teams and reminders.
 * Added English and Dutch translations.
 
+= 2.0.0 =
+* Added reminder time support to the reminder form, schedule output, and email placeholders.
+* Added the `showTime="false"` shortcode option to hide the time column in the public schedule.
+* Improved the public schedule output for date and time formatting with the `split`, `dateFormat`, and `showAll` options.
+* Updated the plugin documentation to describe the release features and shortcode usage.
+
 == Upgrade Notice ==
 
 = 1.0.0 =
 Initial release.
+
+= 2.0.0 =
+This release adds reminder times and updated shortcode options. Existing reminder data without a time value continues to work.
