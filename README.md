@@ -74,6 +74,13 @@ On each run, the plugin compares the reminder Date with the current date in the 
 ### 2.0.1
 - Allow delayed WP-Cron runs to send reminders before the event date instead of marking them missed when the configured send date passes.
 
+### 2.0.0
+
+- Added reminder time support to the reminder form, schedule output, and email placeholders.
+- Added the `showTime="false"` shortcode option to hide the time column in the public schedule.
+- Improved the public schedule output for date and time formatting with the `split`, `dateFormat`, and `showAll` options.
+- Updated the plugin documentation to describe the release features and shortcode usage.
+
 ### 1.0.0
 - Initial release.
 - Added reminder and team management.
@@ -82,13 +89,6 @@ On each run, the plugin compares the reminder Date with the current date in the 
 - Added the `[neutcomp-schedule]` shortcode.
 - Added CSV import/export for teams and reminders.
 - Added English and Dutch translations.
-
-### 2.0.0
-
-- Added reminder time support to the reminder form, schedule output, and email placeholders.
-- Added the `showTime="false"` shortcode option to hide the time column in the public schedule.
-- Improved the public schedule output for date and time formatting with the `split`, `dateFormat`, and `showAll` options.
-- Updated the plugin documentation to describe the release features and shortcode usage.
 
 ## Development checks
 
