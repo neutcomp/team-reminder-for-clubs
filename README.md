@@ -13,7 +13,7 @@ Team Reminder for Clubs is a small WordPress plugin for managing dated email rem
 - Checks reminders every 30 minutes through WP-Cron.
 - Keeps failed deliveries as `not-sent` so they can be retried.
 - Changes successful deliveries to `sent`.
-- Changes reminders whose send window has passed to `missed`.
+- Changes reminders whose event date has passed to `missed`.
 - Includes an administrator button to run the reminder check immediately.
 - Includes a global WordPress Settings page named “Team Reminder for Clubs” for email configuration and CSV import/export.
 - The email message uses the WordPress HTML editor and supports safe formatting such as bold text.
@@ -64,8 +64,8 @@ The plugin registers a WP-Cron event with a 30-minute interval. WP-Cron runs whe
 
 On each run, the plugin compares the reminder Date with the current date in the WordPress timezone:
 
-- Date is exactly the configured number of days ahead: attempt delivery.
-- Date is earlier than the configured number of days ahead: mark `missed` without sending late.
+- Date is the configured number of days ahead or closer, and has not passed: attempt delivery. This allows delayed WP-Cron runs to catch up before the event.
+- Event date has passed: mark `missed` without sending after the event.
 - Date is more than the configured number of days ahead: leave as `not-sent`.
 - `wp_mail()` returns `false`: leave as `not-sent` for the next check.
 

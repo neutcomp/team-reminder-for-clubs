@@ -47,6 +47,7 @@ class NEUTCOMP_TER_Reminder_Cron {
 
 		try {
 			$today       = new DateTimeImmutable( 'now', wp_timezone() );
+			$today_date  = $today->format( 'Y-m-d' );
 			$settings    = NEUTCOMP_TER_Reminder_Mailer::get_settings();
 			$send_date   = $today->modify( '+' . absint( $settings['reminder_days'] ) . ' days' )->format( 'Y-m-d' );
 			$reminder_ids = get_posts(
@@ -65,12 +66,12 @@ class NEUTCOMP_TER_Reminder_Cron {
 					continue;
 				}
 
-				if ( $reminder['date'] < $send_date ) {
+				if ( $reminder['date'] < $today_date ) {
 					update_post_meta( $reminder_id, NEUTCOMP_TER_Reminder_Post_Type::STATUS_META, 'missed' );
 					continue;
 				}
 
-				if ( $reminder['date'] !== $send_date ) {
+				if ( $reminder['date'] > $send_date ) {
 					continue;
 				}
 

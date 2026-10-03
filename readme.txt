@@ -70,7 +70,7 @@ The plugin attempts to send an email the configured number of calendar days befo
 
 = Why was a reminder marked as missed? =
 
-A reminder is marked as missed when its send window has passed before the plugin can process it. The plugin does not send late notifications.
+A reminder is marked as missed when its event date has passed before the plugin can process it. If WP-Cron runs late but before the event date, the plugin still attempts delivery.
 
 = How often does the plugin check reminders? =
 
