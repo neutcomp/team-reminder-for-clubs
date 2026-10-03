@@ -71,6 +71,9 @@ On each run, the plugin compares the reminder Date with the current date in the 
 
 ## Changelog
 
+### 2.0.1
+- Allow delayed WP-Cron runs to send reminders before the event date instead of marking them missed when the configured send date passes.
+
 ### 1.0.0
 - Initial release.
 - Added reminder and team management.

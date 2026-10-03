@@ -4,7 +4,7 @@ Tags: reminders, email, scheduling, wp-cron, teams
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -120,6 +120,9 @@ The email settings screen.
 
 == Changelog ==
 
+= 2.0.1 =
+* Allow delayed WP-Cron runs to send reminders before the event date instead of marking them missed when the configured send date passes.
+
 = 1.0.0 =
 * Initial release.
 * Added reminder and team management.
@@ -136,6 +139,9 @@ The email settings screen.
 * Updated the plugin documentation to describe the release features and shortcode usage.
 
 == Upgrade Notice ==
+
+= 2.0.1 =
+Delayed WP-Cron runs can now send reminders as long as the event date has not passed.
 
 = 1.0.0 =
 Initial release.
