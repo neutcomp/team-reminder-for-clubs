@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Team Reminder for Clubs
  * Description: Manage dated reminders and send notification emails two days before their date.
- * Version: 2.0.1
+ * Version: 2.0.2
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * license: GPLv2 or later
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NEUTCOMP_TER_VERSION', '2.0.1' );
+define( 'NEUTCOMP_TER_VERSION', '2.0.2' );
 define( 'NEUTCOMP_TER_FILE', __FILE__ );
 define( 'NEUTCOMP_TER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'NEUTCOMP_TER_URL', plugin_dir_url( __FILE__ ) );
