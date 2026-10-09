@@ -11,6 +11,13 @@ class NEUTCOMP_TER_Reminder_Cron {
 	public static function init() {
 		add_filter( 'cron_schedules', array( __CLASS__, 'add_schedule' ) );
 		add_action( self::HOOK, array( __CLASS__, 'process' ) );
+		add_action( 'init', array( __CLASS__, 'ensure_scheduled' ) );
+	}
+
+	public static function ensure_scheduled() {
+		if ( ! wp_next_scheduled( self::HOOK ) ) {
+			wp_schedule_event( time(), 'neutcomp_every_thirty_minutes', self::HOOK );
+		}
 	}
 
 	public static function add_schedule( $schedules ) {
